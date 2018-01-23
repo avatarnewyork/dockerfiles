@@ -20,6 +20,11 @@ ENV S3_PREFIX 'backup'
 ENV MULTI_FILES no
 ENV SCHEDULE **None**
 
+# Secrets
+ENV MYSQL_PASSWORD_FILE **None**
+ENV S3_ACCESS_KEY_ID_FILE **None**
+ENV S3_SECRET_ACCESS_KEY_FILE **None**
+
 ADD run.sh run.sh
 ADD backup.sh backup.sh
 

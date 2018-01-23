@@ -3,11 +3,19 @@
 set -e
 
 if [ "${S3_ACCESS_KEY_ID}" == "**None**" ]; then
-  echo "Warning: You did not set the S3_ACCESS_KEY_ID environment variable."
+    if [ "${S3_ACCESS_KEY_ID_FILE}" == "**None**" ]; then
+	echo "Warning: You did not set the S3_ACCESS_KEY_ID environment variable."
+    else
+	S3_ACCESS_KEY_ID=`[[ -f /run/secrets/${S3_ACCESS_KEY_ID_FILE} ]] && cat /run/secrets/${S3_ACCESS_KEY_ID_FILE}`;
+    fi
 fi
 
 if [ "${S3_SECRET_ACCESS_KEY}" == "**None**" ]; then
-  echo "Warning: You did not set the S3_SECRET_ACCESS_KEY environment variable."
+    if [ "${S3_SECRET_ACCESS_KEY_FILE}" == "**None**" ]; then
+	echo "Warning: You did not set the S3_SECRET_ACCESS_KEY environment variable."
+    else
+	S3_SECRET_ACCESS_KEY=`[[ -f /run/secrets/${S3_SECRET_ACCESS_KEY_FILE} ]] && cat /run/secrets/${S3_SECRET_ACCESS_KEY_FILE}`;
+    fi
 fi
 
 if [ "${S3_BUCKET}" == "**None**" ]; then
@@ -26,8 +34,12 @@ if [ "${MYSQL_USER}" == "**None**" ]; then
 fi
 
 if [ "${MYSQL_PASSWORD}" == "**None**" ]; then
-  echo "You need to set the MYSQL_PASSWORD environment variable or link to a container named MYSQL."
-  exit 1
+    if [ "${MYSQL_PASSWORD_FILE}" == "**None**" ]; then
+	echo "You need to set the MYSQL_PASSWORD environment variable or link to a container named MYSQL."
+	exit 1	
+    else
+	MYSQL_PASSWORD=`[[ -f /run/secrets/${MYSQL_PASSWORD_FILE} ]] && cat /run/secrets/${MYSQL_PASSWORD_FILE}`;
+    fi
 fi
 
 if [ "${S3_IAMROLE}" != "true" ]; then
